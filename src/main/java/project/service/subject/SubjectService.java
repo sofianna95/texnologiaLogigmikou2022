@@ -1,4 +1,4 @@
-package project.service.shoppingCard;
+package project.service.subject;
 
 import java.util.List;
 import project.dto.SubjectDTO;
