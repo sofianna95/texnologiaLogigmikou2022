@@ -1,5 +1,7 @@
 package project.persistence.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.AccessMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,19 +10,23 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 @Entity
-public class SubjectEntity {
+public class Subject {
 
     @Id
     @GeneratedValue(generator = "uuid")
     @Column(updatable = false, nullable = false)
+    @Schema(accessMode = AccessMode.READ_ONLY)
     private Long id;
 
     @Column
+    @Schema(accessMode = AccessMode.READ_ONLY)
     private LocalDateTime createdDate;
 
     @Column(nullable = false)
+    @NotNull(message = "must not be null")
     private String name;
 
     @Column
@@ -31,6 +37,7 @@ public class SubjectEntity {
     private List<String> childSubjects = new ArrayList<>();
 
     @Column
+    @Schema(accessMode = AccessMode.READ_ONLY)
     private String status;
 
     public Long getId() {

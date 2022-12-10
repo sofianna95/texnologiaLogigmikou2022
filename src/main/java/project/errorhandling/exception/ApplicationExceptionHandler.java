@@ -37,7 +37,7 @@ public class ApplicationExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({PasswordNotMatchException.class, UserNameAlreadyExistsException.class, PasswordChangedException.class, RoleChangedException.class,
+    @ExceptionHandler({PasswordNotMatchException.class, NewsTitleAlreadyExistsException.class, PasswordChangedException.class, RoleChangedException.class,
             InvalidQuantiyException.class,InvalidStatusException.class, MissingFieldException.class})
     public ResponseEntity<Object> handleBadRequest(RuntimeException ex) {
 

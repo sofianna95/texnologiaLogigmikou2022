@@ -8,13 +8,11 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import project.dto.SubjectDTO;
 import project.errorhandling.exception.InvalidStatusException;
 import project.errorhandling.exception.SubjectNotFoundException;
-import project.mapper.SubjectMapper;
-import project.persistence.entity.SubjectEntity;
+import project.persistence.entity.Subject;
 import project.persistence.repository.SubjectRepository;
-import project.service.Constants;
+import project.service.Status;
 
 @Service
 public class SubjectServiceImpl implements SubjectService {
@@ -31,32 +29,30 @@ public class SubjectServiceImpl implements SubjectService {
 
 
     @Override
-    public SubjectDTO create(SubjectDTO subjectDTO) {
-        SubjectEntity subjectEntity = SubjectMapper.mapDTOToEntity(subjectDTO);
-        subjectEntity.setStatus(Constants.CREATED);
-        subjectEntity.setCreatedDate(LocalDateTime.now());
-        return SubjectMapper.mapEntityToDTO(subjectRepository.save(subjectEntity));
+    public Subject create(Subject subject) {
+        subject.setStatus(Status.CREATED);
+        subject.setCreatedDate(LocalDateTime.now());
+        return subjectRepository.save(subject);
     }
 
     @Override
-    public SubjectDTO update(SubjectDTO subjectDTO, Long id) {
-        SubjectDTO oldSubject = findById(id);
-        if (Constants.CREATED.equals(oldSubject.getStatus())) {
-            SubjectEntity subjectEntity = SubjectMapper.mapDTOToEntity(subjectDTO);
-            subjectEntity.setStatus(Constants.CREATED);
-            subjectEntity.setCreatedDate(LocalDateTime.now());
-            subjectEntity.setId(id);
-            return SubjectMapper.mapEntityToDTO(subjectRepository.save(subjectEntity));
+    public Subject update(Subject subject, Long id) {
+        Subject oldSubject = findById(id);
+        if (Status.CREATED.equals(oldSubject.getStatus())) {
+            subject.setStatus(Status.CREATED);
+            subject.setCreatedDate(LocalDateTime.now());
+            subject.setId(id);
+            return subjectRepository.save(subject);
         }
         throw new InvalidStatusException();
     }
 
 
     @Override
-    public SubjectDTO findById(Long id) {
-        Optional<SubjectEntity> shoppingCardEntity = subjectRepository.findById(id);
-        if (shoppingCardEntity.isPresent()) {
-            return SubjectMapper.mapEntityToDTO(shoppingCardEntity.get());
+    public Subject findById(Long id) {
+        Optional<Subject> subject = subjectRepository.findById(id);
+        if (subject.isPresent()) {
+            return subject.get();
         }
         throw new SubjectNotFoundException(id);
     }
@@ -64,12 +60,11 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     @Transactional
     public void approve(Long id) {
-        SubjectDTO subjectDTO = findById(id);
-        if (Constants.CREATED.equals(subjectDTO.getStatus())) {
-            subjectDTO.setStatus(Constants.APPROVED);
-            SubjectEntity subjectEntity = SubjectMapper.mapDTOToEntity(subjectDTO);
-            subjectEntity.setId(id);
-            subjectRepository.save(subjectEntity);
+        Subject subject = findById(id);
+        if (Status.CREATED.equals(subject.getStatus())) {
+            subject.setStatus(Status.APPROVED);
+            subject.setId(id);
+            subjectRepository.save(subject);
             return;
         }
         throw new InvalidStatusException();
@@ -79,24 +74,27 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     @Transactional
     public void reject(Long id) {
-        SubjectDTO subjectDTO = findById(id);
-        if (Constants.CREATED.equals(subjectDTO.getStatus())) {
-            subjectRepository.delete(SubjectMapper.mapDTOToEntity(subjectDTO));
+        Subject subject = findById(id);
+        if (Status.CREATED.equals(subject.getStatus())) {
+            subjectRepository.delete(subject);
             return;
         }
         throw new InvalidStatusException();
     }
 
     @Override
-    public List<SubjectDTO> findAll() {
-        return SubjectMapper.mapEntityListToDTOList(subjectRepository.findAllByOrderByStatusDescNameDesc());
+    public List<Subject> findAll() {
+        return subjectRepository.findAllByOrderByStatusDescNameDesc();
     }
 
     @Override
-    public List<SubjectDTO> findByName(String name ) {
-        return SubjectMapper.mapEntityListToDTOList(subjectRepository.findByName(name));
+    public List<Subject> findByName(String name) {
+        return subjectRepository.findByName(name);
     }
 
-
+    @Override
+    public boolean existsAllSubjectsById(List<Long> ids) {
+        return subjectRepository.countAllByIdIn(ids).equals(ids.size());
+    }
 
 }

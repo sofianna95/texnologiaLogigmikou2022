@@ -1,23 +1,24 @@
 package project.service.subject;
 
 import java.util.List;
-import project.dto.SubjectDTO;
+import project.persistence.entity.Subject;
 
 public interface SubjectService {
 
-    SubjectDTO create(SubjectDTO subjectDTO);
+    Subject create(Subject subject);
 
-    SubjectDTO update(SubjectDTO subjectDTO, Long id);
+    Subject update(Subject subject, Long id);
 
-    SubjectDTO findById(Long id);
+    Subject findById(Long id);
 
     void approve(Long id);
 
     void reject(Long id);
 
-    List<SubjectDTO> findAll();
+    List<Subject> findAll();
 
-    List<SubjectDTO> findByName(String name);
+    List<Subject> findByName(String name);
 
+    boolean existsAllSubjectsById(List<Long> ids);
 
 }

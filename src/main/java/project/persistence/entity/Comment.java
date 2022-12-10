@@ -1,29 +1,44 @@
-package project.dto;
+package project.persistence.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.AccessMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
+@Entity
+public class Comment {
 
-public class SubjectDTO {
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @Column(updatable = false, nullable = false)
     @Schema(accessMode = AccessMode.READ_ONLY)
     private Long id;
 
+    @Column
     @Schema(accessMode = AccessMode.READ_ONLY)
     private LocalDateTime createdDate;
 
-    @NotNull(message = "must not be null")
+    @Column
     private String name;
 
-    private List<String> childSubjects = new ArrayList<>();
+    @Column(nullable = false)
+    @NotNull(message = "must not be null")
+    private String content;
 
-    private String parentSubject;
-
+    @Column
     @Schema(accessMode = AccessMode.READ_ONLY)
     private String status;
+
+    @Column(nullable = false)
+    @NotNull(message = "must not be null")
+    private Long newsId;
 
     public Long getId() {
         return id;
@@ -49,20 +64,12 @@ public class SubjectDTO {
         this.name = name;
     }
 
-    public List<String> getChildSubjects() {
-        return childSubjects;
+    public String getContent() {
+        return content;
     }
 
-    public void setChildSubjects(List<String> childSubjects) {
-        this.childSubjects = childSubjects;
-    }
-
-    public String getParentSubject() {
-        return parentSubject;
-    }
-
-    public void setParentSubject(String parentSubject) {
-        this.parentSubject = parentSubject;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getStatus() {
@@ -73,15 +80,23 @@ public class SubjectDTO {
         this.status = status;
     }
 
+    public Long getNewsId() {
+        return newsId;
+    }
+
+    public void setNewsId(Long newsId) {
+        this.newsId = newsId;
+    }
+
     @Override
     public String toString() {
-        return "SubjectDTO{" +
+        return "CommentEntity{" +
                 "id=" + id +
                 ", createdDate=" + createdDate +
                 ", name='" + name + '\'' +
-                ", childSubjects=" + childSubjects +
-                ", parentSubject='" + parentSubject + '\'' +
+                ", content='" + content + '\'' +
                 ", status='" + status + '\'' +
+                ", newsId='" + newsId + '\'' +
                 '}';
     }
 }

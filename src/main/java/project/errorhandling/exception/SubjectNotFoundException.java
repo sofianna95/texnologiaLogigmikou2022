@@ -8,5 +8,8 @@ public class SubjectNotFoundException extends RuntimeException {
     public SubjectNotFoundException(long id) {
         super(String.format("Subject with id %s not found", id));
     }
+    public SubjectNotFoundException() {
+        super("Subject  not found. Please check your subjects!");
+    }
 
 }
