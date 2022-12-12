@@ -3,6 +3,8 @@ package project.service.subject;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,13 +89,29 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
+    public List<News> findByTitleOrContent(String title, String content) {
+        if(title != null && content != null){
+            title = "%" + title + "%";
+            content = "%" + content + "%";
+            return newsRepository.findByTitleLikeAndContentLike(title,content);
+        }
+        else if(content != null){
+            content = "%" + content + "%";
+            return newsRepository.findByContentLike(content);
+        }
+        else{
+            title = "%" + title + "%";
+            return newsRepository.findByTitleLike(title);
+        }
+    }
+
+    @Override
     @Transactional
     public void submit(Long id) {
         News news = findById(id);
         news.setStatus(Status.SUBMITTED);
         news.setId(id);
         newsRepository.save(news);
-        return;
     }
 
     @Override
@@ -104,7 +122,6 @@ public class NewsServiceImpl implements NewsService {
         news.setId(id);
         news.setRejectionReason(null);
         newsRepository.save(news);
-        return;
     }
 
 
@@ -117,7 +134,6 @@ public class NewsServiceImpl implements NewsService {
         news.setId(id);
         news.setRejectionReason(rejectionReason);
         newsRepository.save(news);
-        return;
     }
 
     @Override
@@ -129,10 +145,17 @@ public class NewsServiceImpl implements NewsService {
         news.setId(id);
         news.setRejectionReason(null);
         newsRepository.save(news);
-        return;
     }
 
-//
+    @Override
+    public List<News> findAll() {
+        List<News> createdNews = new ArrayList<>();
+        List<News> submittedNews = new ArrayList<>();
+        List<News> approvedNews = new ArrayList<>();
+        List<News> publishedNews = new ArrayList<>();
+    }
+
+    //
 //    @Override
 //    public List<SubjectDTO> findAll() {
 //        return NewsMapper.mapEntityListToDTOList(newsRepository.findAllByOrderByStatusDescNameDesc());

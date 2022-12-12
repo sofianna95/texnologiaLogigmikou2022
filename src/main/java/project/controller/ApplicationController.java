@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import project.api.ApplicationAPI;
 import project.persistence.entity.Comment;
@@ -105,8 +106,18 @@ public class ApplicationController implements ApplicationAPI {
     }
 
     @Override
+    public ResponseEntity<List<News>> findNewsByTitleOrContent(String title, String content,String username, String password) {
+        return new ResponseEntity<>(newsService.findByTitleOrContent(title,content), HttpStatus.OK);
+    }
+
+    @Override
     public ResponseEntity<News> findNewsById(Long id, String username, String password) {
         return new ResponseEntity<>(newsService.findById(id), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<News>> findAllNews(String username, String password) {
+        return new ResponseEntity<>(newsService.findAll(), HttpStatus.OK);
     }
 
     @Override

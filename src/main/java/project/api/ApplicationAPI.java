@@ -64,8 +64,15 @@ public interface ApplicationAPI {
     @PutMapping("/news/publish/{id}")
     ResponseEntity<String> publishNews(@PathVariable Long id, @RequestHeader("username") String username, @RequestHeader("password") String password);
 
+    @GetMapping("news/search")
+    ResponseEntity<List<News>> findNewsByTitleOrContent(@RequestParam(required = false) String title, @RequestParam(required = false) String content,
+            @RequestHeader("username") String username, @RequestHeader("password") String password);
+
     @GetMapping("news/{id}")
-    ResponseEntity<News> findNewsById(Long id, @RequestHeader("username") String username, @RequestHeader("password") String password);
+    ResponseEntity<News> findNewsById(@PathVariable Long id, @RequestHeader("username") String username, @RequestHeader("password") String password);
+
+    @GetMapping("news/searchAll")
+    ResponseEntity<List<News>> findAllNews(@RequestHeader("username") String username, @RequestHeader("password") String password);
 
 
     @PostMapping("/comment/create")
@@ -81,11 +88,11 @@ public interface ApplicationAPI {
             @RequestHeader("password") String password);
 
     @PutMapping("/comment/reject/{id}")
-    ResponseEntity<String> rejectComment(@PathVariable Long id,  @RequestHeader("username") String username,
+    ResponseEntity<String> rejectComment(@PathVariable Long id, @RequestHeader("username") String username,
             @RequestHeader("password") String password);
 
     @GetMapping("/search/comment/{newsId}")
-    ResponseEntity<List<Comment>> findCommentByNewsId(@PathVariable Long newsId,  @RequestHeader("username") String username,
+    ResponseEntity<List<Comment>> findCommentByNewsId(@PathVariable Long newsId, @RequestHeader("username") String username,
             @RequestHeader("password") String password);
 
 }

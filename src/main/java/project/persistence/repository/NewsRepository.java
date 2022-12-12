@@ -11,4 +11,13 @@ public interface NewsRepository extends CrudRepository<News, Long> {
 
     News findByTitle(String title);
 
+    List<News> findByTitleLikeAndContentLike(String title, String content);
+
+    List<News> findByTitleLike(String title);
+
+    List<News> findByContentLike(String content);
+
+    List<News> findAllByOrderByStatusDescPublicationDateDescCreatedDateDesc();
+
+
 }
