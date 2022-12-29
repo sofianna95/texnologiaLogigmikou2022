@@ -37,17 +37,16 @@ public class ApplicationExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({PasswordNotMatchException.class, NewsTitleAlreadyExistsException.class, PasswordChangedException.class, RoleChangedException.class,
-            InvalidQuantiyException.class,InvalidStatusException.class, MissingFieldException.class})
+    @ExceptionHandler({NewsTitleAlreadyExistsException.class,InvalidStatusException.class})
     public ResponseEntity<Object> handleBadRequest(RuntimeException ex) {
 
         return new ResponseEntity<>(getBody(ex), HttpStatus.BAD_REQUEST);
     }
-
-    @ExceptionHandler({AuthenticationFailedException.class, TokenVerificationFailedException.class, VerificationRoleException.class,})
-    public ResponseEntity<Object> handleForbidden(RuntimeException ex) {
-        return new ResponseEntity<>(getBody(ex), HttpStatus.FORBIDDEN);
-    }
+//
+//    @ExceptionHandler({AuthenticationFailedException.class})
+//    public ResponseEntity<Object> handleForbidden(RuntimeException ex) {
+//        return new ResponseEntity<>(getBody(ex), HttpStatus.FORBIDDEN);
+//    }
 
     private Map<String, Object> getBody(RuntimeException ex) {
         Map<String, Object> body = new LinkedHashMap<>();

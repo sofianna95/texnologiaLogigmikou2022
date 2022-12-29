@@ -19,14 +19,10 @@ public class SubjectServiceImpl implements SubjectService {
 
     private final SubjectRepository subjectRepository;
 
-
-
     @Autowired
     public SubjectServiceImpl(SubjectRepository subjectRepository) {
         this.subjectRepository = subjectRepository;
     }
-
-
 
     @Override
     public Subject create(Subject subject) {

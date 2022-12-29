@@ -1,4 +1,4 @@
-package project.service.subject;
+package project.service.news;
 
 
 
@@ -16,6 +16,7 @@ import project.errorhandling.exception.SubjectNotFoundException;
 import project.persistence.entity.News;
 import project.persistence.repository.NewsRepository;
 import project.service.Status;
+import project.service.subject.SubjectService;
 
 @Service
 public class NewsServiceImpl implements NewsService {
@@ -31,8 +32,6 @@ public class NewsServiceImpl implements NewsService {
         this.newsRepository = newsRepository;
         this.subjectService = subjectService;
     }
-
-
 
     @Override
     public News create(News news) {
@@ -146,26 +145,4 @@ public class NewsServiceImpl implements NewsService {
         news.setRejectionReason(null);
         newsRepository.save(news);
     }
-
-    @Override
-    public List<News> findAll() {
-        List<News> createdNews = new ArrayList<>();
-        List<News> submittedNews = new ArrayList<>();
-        List<News> approvedNews = new ArrayList<>();
-        List<News> publishedNews = new ArrayList<>();
-    }
-
-    //
-//    @Override
-//    public List<SubjectDTO> findAll() {
-//        return NewsMapper.mapEntityListToDTOList(newsRepository.findAllByOrderByStatusDescNameDesc());
-//    }
-//
-//    @Override
-//    public List<SubjectDTO> findByName(String name ) {
-//        return NewsMapper.mapEntityListToDTOList(newsRepository.findByName(name));
-//    }
-
-
-
 }

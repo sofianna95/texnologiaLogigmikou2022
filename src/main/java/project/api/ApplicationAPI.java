@@ -71,10 +71,6 @@ public interface ApplicationAPI {
     @GetMapping("news/{id}")
     ResponseEntity<News> findNewsById(@PathVariable Long id, @RequestHeader("username") String username, @RequestHeader("password") String password);
 
-    @GetMapping("news/searchAll")
-    ResponseEntity<List<News>> findAllNews(@RequestHeader("username") String username, @RequestHeader("password") String password);
-
-
     @PostMapping("/comment/create")
     ResponseEntity<Comment> createComment(@Valid @RequestBody Comment comment, @RequestHeader("username") String username,
             @RequestHeader("password") String password);

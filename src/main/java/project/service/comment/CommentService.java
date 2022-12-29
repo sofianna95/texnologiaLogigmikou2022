@@ -1,4 +1,4 @@
-package project.service.subject;
+package project.service.comment;
 
 import java.util.List;
 import project.persistence.entity.Comment;

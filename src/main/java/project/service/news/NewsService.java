@@ -1,4 +1,4 @@
-package project.service.subject;
+package project.service.news;
 
 import java.util.List;
 import project.persistence.entity.News;
@@ -20,7 +20,4 @@ public interface NewsService {
     void reject(Long id, String rejectionReason);
 
     void publish(Long id);
-
-    List<News> findAll();
-
 }

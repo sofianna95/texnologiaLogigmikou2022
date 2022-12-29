@@ -1,8 +1,7 @@
-package project.service.subject;
+package project.service.comment;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +10,10 @@ import project.errorhandling.exception.CommentNotFoundException;
 import project.errorhandling.exception.InvalidStatusException;
 import project.persistence.entity.Comment;
 import project.persistence.entity.News;
-import project.persistence.entity.Subject;
 import project.persistence.repository.CommentRepository;
 import project.persistence.repository.NewsRepository;
 import project.service.Status;
+import project.service.news.NewsService;
 
 @Service
 public class CommentServiceImpl implements CommentService {
