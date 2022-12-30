@@ -3,7 +3,6 @@ package project.service.news;
 
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
@@ -24,7 +23,6 @@ public class NewsServiceImpl implements NewsService {
     private final NewsRepository newsRepository;
 
     private final SubjectService subjectService;
-
 
 
     @Autowired
@@ -108,19 +106,31 @@ public class NewsServiceImpl implements NewsService {
     @Transactional
     public void submit(Long id) {
         News news = findById(id);
-        news.setStatus(Status.SUBMITTED);
-        news.setId(id);
-        newsRepository.save(news);
+
+        if (Status.CREATED.equals(news.getStatus())) {
+            news.setStatus(Status.SUBMITTED);
+            news.setId(id);
+            newsRepository.save(news);
+
+            return;
+        }
+
+        throw new InvalidStatusException();
     }
 
     @Override
     @Transactional
     public void approve(Long id) {
         News news = findById(id);
-        news.setStatus(Status.APPROVED);
-        news.setId(id);
-        news.setRejectionReason(null);
-        newsRepository.save(news);
+
+        if (Status.SUBMITTED.equals(news.getStatus())) {
+            news.setStatus(Status.APPROVED);
+            news.setId(id);
+            news.setRejectionReason(null);
+            newsRepository.save(news);
+            return;
+        }
+        throw new InvalidStatusException();
     }
 
 
@@ -129,20 +139,29 @@ public class NewsServiceImpl implements NewsService {
     @Transactional
     public void reject(Long id,String rejectionReason) {
         News news = findById(id);
-        news.setStatus(Status.CREATED);
-        news.setId(id);
-        news.setRejectionReason(rejectionReason);
-        newsRepository.save(news);
+        if (Status.SUBMITTED.equals(news.getStatus())) {
+            news.setStatus(Status.CREATED);
+            news.setId(id);
+            news.setRejectionReason(rejectionReason);
+            newsRepository.save(news);
+            return;
+        }
+        throw new InvalidStatusException();
+
     }
 
     @Override
     @Transactional
     public void publish(Long id) {
         News news = findById(id);
-        news.setStatus(Status.PUBLISHED);
-        news.setPublicationDate(LocalDateTime.now());
-        news.setId(id);
-        news.setRejectionReason(null);
-        newsRepository.save(news);
+        if (Status.APPROVED.equals(news.getStatus())) {
+            news.setStatus(Status.PUBLISHED);
+            news.setPublicationDate(LocalDateTime.now());
+            news.setId(id);
+            news.setRejectionReason(null);
+            newsRepository.save(news);
+        }
+        throw new InvalidStatusException();
+
     }
 }

@@ -67,13 +67,17 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = findById(commentId);
         News news = newsService.findById(newsId);
 
-        //update comment
-        comment.setStatus(Status.APPROVED);
-        commentRepository.save(comment);
+        if(Status.CREATED.equals(comment.getStatus())){
+            //update comment
+            comment.setStatus(Status.APPROVED);
+            commentRepository.save(comment);
 
-        //update news
-        news.setComments(new ArrayList<>(List.of(commentId)));
-        newsRepository.save(news);
+            //update news
+            news.getComments().add(commentId);
+            newsRepository.save(news);
+        }
+
+        throw new InvalidStatusException();
 
     }
 
