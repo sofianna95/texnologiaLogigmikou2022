@@ -88,48 +88,55 @@ public class ApplicationController implements ApplicationAPI {
 
     @Override
     public ResponseEntity<News> createNews(News news, String username, String password) {
-        return new ResponseEntity<>(newsService.create(news), HttpStatus.CREATED);
+        UserEntity loggedUser = userService.login(username, password);
+        return new ResponseEntity<>(newsService.create(news,loggedUser), HttpStatus.CREATED);
     }
 
     @Override
     public ResponseEntity<News> updateNews(Long id, News news, String username, String password) {
-
-        return new ResponseEntity<>(newsService.update(news, id), HttpStatus.OK);
+        UserEntity loggedUser = userService.login(username, password);
+        return new ResponseEntity<>(newsService.update(news, id,loggedUser), HttpStatus.OK);
 
     }
 
     @Override
     public ResponseEntity<String> submitNews(Long id, String username, String password) {
-        newsService.submit(id);
+        UserEntity loggedUser = userService.login(username, password);
+        newsService.submit(id,loggedUser);
         return new ResponseEntity<>("News submitted", HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<String> approveNews(Long id, String username, String password) {
-        newsService.approve(id);
+        UserEntity loggedUser = userService.login(username, password);
+        newsService.approve(id,loggedUser);
         return new ResponseEntity<>("News approved", HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<String> rejectNews(Long id, String rejectionReason, String username, String password) {
-        newsService.reject(id, rejectionReason);
+        UserEntity loggedUser = userService.login(username, password);
+        newsService.reject(id, rejectionReason,loggedUser);
         return new ResponseEntity<>("News rejected", HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<String> publishNews(Long id, String username, String password) {
-        newsService.publish(id);
+        UserEntity loggedUser = userService.login(username, password);
+        newsService.publish(id,loggedUser);
         return new ResponseEntity<>("News published", HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<List<News>> findNewsByTitleOrContent(String title, String content, String username, String password) {
-        return new ResponseEntity<>(newsService.findByTitleOrContent(title, content), HttpStatus.OK);
+        UserEntity loggedUser = userService.login(username, password);
+        return new ResponseEntity<>(newsService.findByTitleOrContent(title, content,loggedUser), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<News> findNewsById(Long id, String username, String password) {
-        return new ResponseEntity<>(newsService.findById(id), HttpStatus.OK);
+        UserEntity loggedUser = userService.login(username, password);
+        return new ResponseEntity<>(newsService.findById(id,loggedUser), HttpStatus.OK);
     }
 
     @Override

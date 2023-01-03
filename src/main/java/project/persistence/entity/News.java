@@ -60,6 +60,8 @@ public class News {
     @Schema(accessMode = AccessMode.READ_ONLY)
     private String rejectionReason;
 
+    private String username;
+
     public Long getId() {
         return id;
     }
@@ -130,6 +132,14 @@ public class News {
 
     public void setRejectionReason(String rejectionReason) {
         this.rejectionReason = rejectionReason;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override

@@ -19,7 +19,7 @@ public interface SubjectRepository extends CrudRepository<Subject, Long> {
 
     Integer countAllByIdIn(List<Long> ids);
 
-    @Query("select subject from Subject subject where (subject.id= :id and subject.status = :status) or subject.username = :username")
+    @Query("select subject from Subject subject where subject.id= :id and (subject.status = :status or subject.username = :username)")
     Optional<Subject> findByIdAndStatusOrUsername(@Param("id") Long id, @Param("status") String status, @Param("username") String username);
 
 }
