@@ -9,9 +9,11 @@ import project.api.ApplicationAPI;
 import project.persistence.entity.Comment;
 import project.persistence.entity.News;
 import project.persistence.entity.Subject;
+import project.persistence.entity.UserEntity;
 import project.service.comment.CommentService;
 import project.service.news.NewsService;
 import project.service.subject.SubjectService;
+import project.service.user.UserService;
 
 @RestController
 public class ApplicationController implements ApplicationAPI {
@@ -22,50 +24,66 @@ public class ApplicationController implements ApplicationAPI {
 
     private final CommentService commentService;
 
+    private final UserService userService;
+
     @Autowired
-    public ApplicationController(SubjectService subjectService, NewsService newsService, CommentService commentService) {
+    public ApplicationController(SubjectService subjectService, NewsService newsService, CommentService commentService,
+            UserService userService) {
         this.subjectService = subjectService;
         this.newsService = newsService;
         this.commentService = commentService;
+        this.userService = userService;
     }
 
 
     public ResponseEntity<Subject> createSubject(Subject subject, String username, String password) {
-        return new ResponseEntity<>(subjectService.create(subject), HttpStatus.CREATED);
+        UserEntity loggedUser = userService.login(username, password);
+        return new ResponseEntity<>(subjectService.create(subject, loggedUser), HttpStatus.CREATED);
     }
 
     @Override
     public ResponseEntity<Subject> updateSubject(Long id, Subject subject, String username, String password) {
+        UserEntity loggedUser = userService.login(username, password);
 
-        return new ResponseEntity<>(subjectService.update(subject, id), HttpStatus.OK);
+        return new ResponseEntity<>(subjectService.update(subject, id, loggedUser), HttpStatus.OK);
 
     }
 
 
     @Override
     public ResponseEntity<String> submitSubject(Long id, String username, String password) {
-        subjectService.approve(id);
+        UserEntity loggedUser = userService.login(username, password);
+
+        subjectService.approve(id, loggedUser);
         return new ResponseEntity<>("Subject approved", HttpStatus.OK);
     }
 
     public ResponseEntity<String> rejectSubject(Long id, String username, String password) {
-        subjectService.reject(id);
+        UserEntity loggedUser = userService.login(username, password);
+
+        subjectService.reject(id,loggedUser);
         return new ResponseEntity<>("Subject rejected", HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<Subject> findSubjectById(Long id, String username, String password) {
-        return new ResponseEntity<>(subjectService.findById(id), HttpStatus.OK);
+        UserEntity loggedUser = userService.login(username, password);
+
+        return new ResponseEntity<>(subjectService.findById(id, loggedUser), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<List<Subject>> findAll(String username, String password) {
-        return new ResponseEntity<>(subjectService.findAll(), HttpStatus.OK);
+        UserEntity loggedUser = userService.login(username, password);
+
+        return new ResponseEntity<>(subjectService.findAll(loggedUser), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<List<Subject>> findByName(String name, String username, String password) {
-        return new ResponseEntity<>(subjectService.findByName(name), HttpStatus.OK);
+        UserEntity loggedUser = userService.login(username, password);
+
+        return new ResponseEntity<>(subjectService.findByName(name, loggedUser), HttpStatus.OK);
     }
 
     @Override
@@ -94,19 +112,19 @@ public class ApplicationController implements ApplicationAPI {
 
     @Override
     public ResponseEntity<String> rejectNews(Long id, String rejectionReason, String username, String password) {
-        newsService.reject(id,rejectionReason);
+        newsService.reject(id, rejectionReason);
         return new ResponseEntity<>("News rejected", HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<String> publishNews(Long id,String username, String password) {
+    public ResponseEntity<String> publishNews(Long id, String username, String password) {
         newsService.publish(id);
         return new ResponseEntity<>("News published", HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<List<News>> findNewsByTitleOrContent(String title, String content,String username, String password) {
-        return new ResponseEntity<>(newsService.findByTitleOrContent(title,content), HttpStatus.OK);
+    public ResponseEntity<List<News>> findNewsByTitleOrContent(String title, String content, String username, String password) {
+        return new ResponseEntity<>(newsService.findByTitleOrContent(title, content), HttpStatus.OK);
     }
 
     @Override
@@ -116,29 +134,40 @@ public class ApplicationController implements ApplicationAPI {
 
     @Override
     public ResponseEntity<Comment> createComment(Comment comment, String username, String password) {
-        return new ResponseEntity<>(commentService.create(comment), HttpStatus.CREATED);
+
+        UserEntity loggedUser = userService.login(username, password);
+
+        return new ResponseEntity<>(commentService.create(comment, loggedUser), HttpStatus.CREATED);
     }
 
     @Override
-    public ResponseEntity<Comment> updateComment(Long id ,String content, String username, String password) {
-        return new ResponseEntity<>(commentService.update(id, content), HttpStatus.OK);
+    public ResponseEntity<Comment> updateComment(Long id, String content, String username, String password) {
+        UserEntity loggedUser = userService.login(username, password);
+
+        return new ResponseEntity<>(commentService.update(id, content, loggedUser), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<String> approveComment(Long commentId ,Long newsId, String username, String password) {
-        commentService.approve(commentId, newsId);
+    public ResponseEntity<String> approveComment(Long commentId, Long newsId, String username, String password) {
+        UserEntity loggedUser = userService.login(username, password);
+
+        commentService.approve(commentId, newsId, loggedUser);
         return new ResponseEntity<>("Comment approved", HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<String> rejectComment(Long id ,String username, String password) {
-        commentService.reject(id);
+    public ResponseEntity<String> rejectComment(Long id, String username, String password) {
+        UserEntity loggedUser = userService.login(username, password);
+
+        commentService.reject(id, loggedUser);
         return new ResponseEntity<>("Comment reject", HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<List<Comment>> findCommentByNewsId(Long newsId ,String username, String password) {
-        return new ResponseEntity<>(commentService.findCommentByNewsId(newsId), HttpStatus.OK);
+    public ResponseEntity<List<Comment>> findCommentByNewsId(Long newsId, String username, String password) {
+        UserEntity loggedUser = userService.login(username, password);
+
+        return new ResponseEntity<>(commentService.findCommentByNewsId(newsId, loggedUser), HttpStatus.OK);
 
     }
 }

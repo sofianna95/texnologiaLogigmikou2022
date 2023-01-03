@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class InvalidStatusException extends RuntimeException {
 
     public InvalidStatusException() {
-        super("Invalid Status. Only subjects in status created can change ");
+        super("Invalid Status.");
     }
 }

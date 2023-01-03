@@ -37,10 +37,16 @@ public class ApplicationExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({NewsTitleAlreadyExistsException.class,InvalidStatusException.class})
+    @ExceptionHandler({NewsTitleAlreadyExistsException.class,InvalidStatusException.class,InvalidCredentialsException.class})
     public ResponseEntity<Object> handleBadRequest(RuntimeException ex) {
 
         return new ResponseEntity<>(getBody(ex), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({InsufficientRoleException.class})
+    public ResponseEntity<Object> handleForbidden(RuntimeException ex) {
+
+        return new ResponseEntity<>(getBody(ex), HttpStatus.FORBIDDEN);
     }
 //
 //    @ExceptionHandler({AuthenticationFailedException.class})

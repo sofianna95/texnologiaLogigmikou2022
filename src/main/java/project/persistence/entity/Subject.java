@@ -40,6 +40,10 @@ public class Subject {
     @Schema(accessMode = AccessMode.READ_ONLY)
     private String status;
 
+    @Column
+    @Schema(accessMode = AccessMode.READ_ONLY)
+    private String username;
+
     public Long getId() {
         return id;
     }
@@ -86,6 +90,14 @@ public class Subject {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override

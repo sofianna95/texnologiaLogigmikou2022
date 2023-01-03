@@ -160,8 +160,18 @@ public class NewsServiceImpl implements NewsService {
             news.setId(id);
             news.setRejectionReason(null);
             newsRepository.save(news);
+            return;
         }
         throw new InvalidStatusException();
 
+    }
+
+    @Override
+    public News findByIdAndStatus(Long id, String status) {
+        Optional<News> news = newsRepository.findByIdAndStatus(id,status);
+        if (news.isPresent()) {
+            return news.get();
+        }
+        throw new NewsNotFoundException(id);
     }
 }

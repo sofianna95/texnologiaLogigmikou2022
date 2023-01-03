@@ -20,4 +20,6 @@ public interface NewsService {
     void reject(Long id, String rejectionReason);
 
     void publish(Long id);
+
+    News findByIdAndStatus(Long id, String status);
 }
