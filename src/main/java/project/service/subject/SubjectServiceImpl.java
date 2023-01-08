@@ -48,10 +48,9 @@ public class SubjectServiceImpl implements SubjectService {
 
             Subject oldSubject = findById(id,loggedUser);
             if (Status.CREATED.equals(oldSubject.getStatus())) {
-                subject.setStatus(Status.CREATED);
-                subject.setCreatedDate(LocalDateTime.now());
-                subject.setId(id);
-                return subjectRepository.save(subject);
+                oldSubject.setParentSubject(subject.getParentSubject());
+                oldSubject.setName(subject.getName());
+                return subjectRepository.save(oldSubject);
             }
             throw new InvalidStatusException();
 

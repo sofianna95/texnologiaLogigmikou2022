@@ -60,6 +60,7 @@ public class News {
     @Schema(accessMode = AccessMode.READ_ONLY)
     private String rejectionReason;
 
+    @Schema(accessMode = AccessMode.READ_ONLY)
     private String username;
 
     public Long getId() {

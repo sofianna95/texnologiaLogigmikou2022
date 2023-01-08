@@ -35,10 +35,10 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment create(Comment comment, UserEntity user ) {
-        News news = newsService.findByIdAndStatus(comment.getNewsId(),Status.PUBLISHED);
+    public Comment create(Comment comment, UserEntity user) {
+        News news = newsService.findByIdAndStatus(comment.getNewsId(), Status.PUBLISHED);
 
-        if(Roles.JOURNALIST.equals(user.getRole()) ||Roles.SUPERVISOR.equals(user.getRole())){
+        if (Roles.JOURNALIST.equals(user.getRole()) || Roles.SUPERVISOR.equals(user.getRole())) {
             comment.setUsername(user.getUsername());
             comment.setName(user.getFullName());
         }
@@ -51,8 +51,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment update(Long id, String content, UserEntity user) {
 
-        if(Roles.SUPERVISOR.equals(user.getRole())){
-            Comment comment = findById(id,user);
+        if (Roles.SUPERVISOR.equals(user.getRole())) {
+            Comment comment = findById(id, user);
             if (Status.CREATED.equals(comment.getStatus())) {
                 comment.setContent(content);
                 return commentRepository.save(comment);
@@ -71,7 +71,8 @@ public class CommentServiceImpl implements CommentService {
 
             if (Roles.VISITOR.equals(user.getRole()) && Status.APPROVED.equals(comment.getStatus())) {
                 return comment;
-            } else if (Roles.JOURNALIST.equals(user.getRole()) && Status.APPROVED.equals(comment.getStatus()) || comment.getUsername().equals(user.getUsername())) {
+            } else if (Roles.JOURNALIST.equals(user.getRole()) && Status.APPROVED.equals(comment.getStatus()) || comment.getUsername() == null
+                    || comment.getUsername().equals(user.getUsername())) {
                 return comment;
             } else {
                 return comment;
@@ -83,10 +84,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void approve(Long commentId, Long newsId, UserEntity user) {
-        if(Roles.SUPERVISOR.equals(user.getRole())){
-            Comment comment = findById(commentId,user);
+        if (Roles.SUPERVISOR.equals(user.getRole())) {
+            Comment comment = findById(commentId, user);
 
-            News news = newsService.findById(newsId,user);
+            News news = newsService.findById(newsId, user);
 
             if (Status.CREATED.equals(comment.getStatus())) {
                 //update comment
@@ -101,13 +102,14 @@ public class CommentServiceImpl implements CommentService {
 
             throw new InvalidStatusException();
         }
+        throw new InsufficientRoleException();
 
     }
 
     @Override
     public void reject(Long id, UserEntity user) {
-        Comment comment = findById(id,user);
-        if(Roles.SUPERVISOR.equals(user.getRole())){
+        Comment comment = findById(id, user);
+        if (Roles.SUPERVISOR.equals(user.getRole())) {
             if (Status.CREATED.equals(comment.getStatus())) {
                 commentRepository.delete(comment);
                 return;
@@ -122,19 +124,19 @@ public class CommentServiceImpl implements CommentService {
 
         List<Comment> comments = commentRepository.findByNewsIdOrderByCreatedDateDesc(newsId);
 
-            if (Roles.VISITOR.equals(user.getRole())) {
-                return comments.stream()
-                        .filter(comment -> Status.APPROVED.equals(comment.getStatus()))
-                               .collect(Collectors.toList());
+        if (Roles.VISITOR.equals(user.getRole())) {
+            return comments.stream()
+                           .filter(comment -> Status.APPROVED.equals(comment.getStatus()))
+                           .collect(Collectors.toList());
 
-            } else if (Roles.JOURNALIST.equals(user.getRole()) ) {
+        } else if (Roles.JOURNALIST.equals(user.getRole())) {
 
-                return comments.stream()
-                               .filter(comment -> Status.APPROVED.equals(comment.getStatus()) || user.getUsername().equals(comment.getUsername()))
-                               .collect(Collectors.toList());
-            } else {
-                return comments;
-            }
-
+            return comments.stream()
+                           .filter(comment -> Status.APPROVED.equals(comment.getStatus()) || user.getUsername().equals(comment.getUsername()))
+                           .collect(Collectors.toList());
+        } else {
+            return comments;
         }
+
+    }
 }

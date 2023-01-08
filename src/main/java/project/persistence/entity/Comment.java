@@ -41,6 +41,7 @@ public class Comment {
     private Long newsId;
 
     @Column
+    @Schema(accessMode = AccessMode.READ_ONLY)
     private String username;
 
     public Long getId() {

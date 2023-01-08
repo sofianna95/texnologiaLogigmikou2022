@@ -35,13 +35,13 @@ public interface ApplicationAPI {
     ResponseEntity<String> rejectSubject(Long id, @RequestHeader("username") String username, @RequestHeader("password") String password);
 
     @GetMapping("subject/{id}")
-    ResponseEntity<Subject> findSubjectById(Long id, @RequestHeader("username") String username, @RequestHeader("password") String password);
+    ResponseEntity<Subject> findSubjectById(Long id, @RequestHeader(value = "username", required = false) String username, @RequestHeader(value = "password", required = false) String password);
 
     @GetMapping("subjects")
-    ResponseEntity<List<Subject>> findAll(@RequestHeader("username") String username, @RequestHeader("password") String password);
+    ResponseEntity<List<Subject>> findAll(@RequestHeader(value = "username",required = false) String username, @RequestHeader(value = "password", required = false) String password);
 
     @GetMapping("subjects/{name}")
-    ResponseEntity<List<Subject>> findByName(String name, @RequestHeader("username") String username, @RequestHeader("password") String password);
+    ResponseEntity<List<Subject>> findByName(String name, @RequestHeader(value = "username",required = false) String username, @RequestHeader(value = "password",required = false) String password);
 
     @PostMapping("/news/create")
     ResponseEntity<News> createNews(@Valid @RequestBody News news, @RequestHeader("username") String username,
@@ -58,22 +58,22 @@ public interface ApplicationAPI {
     ResponseEntity<String> approveNews(@PathVariable Long id, @RequestHeader("username") String username, @RequestHeader("password") String password);
 
     @PutMapping("/news/reject/{id}")
-    ResponseEntity<String> rejectNews(@PathVariable Long id, @PathVariable String rejectionReason, @RequestHeader("username") String username,
+    ResponseEntity<String> rejectNews(@PathVariable Long id, @RequestParam String rejectionReason, @RequestHeader("username") String username,
             @RequestHeader("password") String password);
 
     @PutMapping("/news/publish/{id}")
-    ResponseEntity<String> publishNews(@PathVariable Long id, @RequestHeader("username") String username, @RequestHeader("password") String password);
+    ResponseEntity<String> publishNews(@PathVariable Long id, @RequestHeader(value = "username", required = false) String username, @RequestHeader(value = "password", required = false) String password);
 
     @GetMapping("news/search")
     ResponseEntity<List<News>> findNewsByTitleOrContent(@RequestParam(required = false) String title, @RequestParam(required = false) String content,
-            @RequestHeader("username") String username, @RequestHeader("password") String password);
+            @RequestHeader(value = "username", required = false) String username, @RequestHeader(value = "password", required = false) String password);
 
     @GetMapping("news/{id}")
-    ResponseEntity<News> findNewsById(@PathVariable Long id, @RequestHeader("username") String username, @RequestHeader("password") String password);
+    ResponseEntity<News> findNewsById(@PathVariable Long id, @RequestHeader(value = "username", required = false) String username, @RequestHeader(value = "password", required = false) String password);
 
     @PostMapping("/comment/create")
-    ResponseEntity<Comment> createComment(@Valid @RequestBody Comment comment, @RequestHeader("username") String username,
-            @RequestHeader("password") String password);
+    ResponseEntity<Comment> createComment(@Valid @RequestBody Comment comment, @RequestHeader(value = "username", required = false) String username,
+            @RequestHeader(value = "password", required = false) String password);
 
     @PutMapping("/comment/{id}")
     ResponseEntity<Comment> updateComment(@PathVariable Long id, @RequestParam String content, @RequestHeader("username") String username,
@@ -83,12 +83,12 @@ public interface ApplicationAPI {
     ResponseEntity<String> approveComment(@PathVariable Long commentId, @RequestParam Long newsId, @RequestHeader("username") String username,
             @RequestHeader("password") String password);
 
-    @PutMapping("/comment/reject/{id}")
+    @DeleteMapping("/comment/reject/{id}")
     ResponseEntity<String> rejectComment(@PathVariable Long id, @RequestHeader("username") String username,
             @RequestHeader("password") String password);
 
     @GetMapping("/search/comment/{newsId}")
-    ResponseEntity<List<Comment>> findCommentByNewsId(@PathVariable Long newsId, @RequestHeader("username") String username,
-            @RequestHeader("password") String password);
+    ResponseEntity<List<Comment>> findCommentByNewsId(@PathVariable Long newsId, @RequestHeader(value = "username", required = false) String username,
+            @RequestHeader(value = "password", required = false) String password);
 
 }
