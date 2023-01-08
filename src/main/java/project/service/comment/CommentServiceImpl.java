@@ -86,7 +86,7 @@ public class CommentServiceImpl implements CommentService {
         if(Roles.SUPERVISOR.equals(user.getRole())){
             Comment comment = findById(commentId,user);
 
-            News news = newsService.findById(newsId);
+            News news = newsService.findById(newsId,user);
 
             if (Status.CREATED.equals(comment.getStatus())) {
                 //update comment
